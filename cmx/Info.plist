@@ -5,6 +5,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>cbz</string>
 			<key>CFBundleTypeName</key>
 			<string>Comic Book Archive</string>
 			<key>CFBundleTypeRole</key>
