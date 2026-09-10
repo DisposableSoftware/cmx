@@ -429,9 +429,22 @@ the change touches the app target, it must also build. Don't report a task compl
   re-saved a ghost copy of the project into `cmx/` and reported a vacuous 0.5s "successful" build.
   If an MCP build looks too fast or produces no product, close and reopen the workspace, and treat
   `xcodebuild` as ground truth.
-- App icon + `.cbz` document icon are generated, not hand-drawn: `swift scripts/generate-icons.swift
-  <outDir>` redraws the 1024px masters (CoreGraphics), then sips fills the appiconset and
-  `iconutil` packs `cmx/cbz.icns`. Edit the script, not the PNGs.
+- App icon + `.cbz` document icon are generated, not hand-drawn. `scripts/generate-icons.sh` redraws
+  everything and installs it (appiconset PNGs + `cmx/cbz.icns`); `generate-icons.swift` does the
+  drawing. Edit the script, never the PNGs.
+- **Every size is drawn at its own pixel size — nothing is downscaled.** A single 1024 master looked
+  fine at 128px and was mush at 16px: a 9pt panel stroke scales to 0.14px and vanishes, so the two
+  lower panels merged into one grey block. The `Detail` enum picks artwork per size — `minimal` (16px:
+  accent band plus one bordered panel), `simplified` (32–64px: bubble plus two bordered panels), and
+  `full` (128px+: the original drawing, unchanged).
+- Small-size rules that actually mattered, all learned the hard way: separate shapes with **gaps of
+  filled background, never hairline strokes**; give panels a border on *every* side, since a gutter
+  alone lets them merge into the page; snap rects to whole pixels and re-centre after snapping, or
+  rounding shunts the motif sideways; put page edges on **half**-pixels so a 1px border lands in one
+  column instead of straddling two; skip shadows, rotation, halftone and text below 128px.
+- Verify with an ASCII pixel map (`colorAt` per pixel) rather than by eye — that is what caught a
+  guard silently dropping the 16px panel entirely. Note that `NSWorkspace.icon(forFile:)` can serve a
+  generic placeholder at some sizes; render the `.icns` representations directly to check the file.
 - A `.xcodeproj` is a generated-looking bundle; edit it through Xcode, MCP tools, or careful targeted
   changes, not bulk rewrites.
 - **App Sandbox off.** The app opens any `.cbz` anywhere on the filesystem, so it ships unsandboxed:
