@@ -248,6 +248,22 @@ xcodebuild -version          # verify
 
 `swift build` / `swift test` against `CMXKit` work either way, so logic work is never blocked on this.
 
+### Install
+
+```sh
+scripts/install.sh            # build Release, install to /Applications, lsregister
+scripts/install.sh --no-build # reinstall the last Release build (from build/)
+```
+
+The script quits a running cmx, builds Release into `build/` (gitignored), copies with `ditto`
+(preserves the code signature — never plain `cp`), and force-registers with LaunchServices so the
+`.cbz` association and icons refresh immediately. Run it whenever a change should reach the installed
+copy — the file association points at `/Applications/cmx.app`, not at DerivedData builds.
+
+The default-handler choice (cmx opens `.cbz`) is a one-time LaunchServices setting already made; it
+survives reinstalls and is NOT part of the script. If it's ever lost: Finder → Get Info on a `.cbz` →
+Open with → cmx → Change All.
+
 **Definition of done:** the package builds clean and `swift test` passes, with no new warnings. When
 the change touches the app target, it must also build. Don't report a task complete before that.
 
@@ -266,6 +282,9 @@ the change touches the app target, it must also build. Don't report a task compl
   re-saved a ghost copy of the project into `cmx/` and reported a vacuous 0.5s "successful" build.
   If an MCP build looks too fast or produces no product, close and reopen the workspace, and treat
   `xcodebuild` as ground truth.
+- App icon + `.cbz` document icon are generated, not hand-drawn: `swift scripts/generate-icons.swift
+  <outDir>` redraws the 1024px masters (CoreGraphics), then sips fills the appiconset and
+  `iconutil` packs `cmx/cbz.icns`. Edit the script, not the PNGs.
 - A `.xcodeproj` is a generated-looking bundle; edit it through Xcode, MCP tools, or careful targeted
   changes, not bulk rewrites.
 - **App Sandbox off.** The app opens any `.cbz` anywhere on the filesystem, so it ships unsandboxed:
