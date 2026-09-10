@@ -11,6 +11,7 @@ public protocol ReaderUseCase: AnyObject {
     func goToPreviousPage() async
     func goToFirstPage() async
     func goToLastPage() async
+    func toggleDualPage() async
     func clearError()
 }
 

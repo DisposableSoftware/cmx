@@ -43,6 +43,7 @@ final class DefaultReaderUseCase: ReaderUseCase {
             self.session = session
             state.book = Book(url: url, pages: pages, metadata: metadata)
             state.currentImage = nil
+            state.secondaryImage = nil
 
             let saved = progressGateway.savedPageIndex(for: url) ?? 0
             let resume = min(max(saved, 0), pages.count - 1)
@@ -56,8 +57,19 @@ final class DefaultReaderUseCase: ReaderUseCase {
         }
     }
 
-    func goToNextPage() async { await go(to: state.currentPageIndex + 1) }
-    func goToPreviousPage() async { await go(to: state.currentPageIndex - 1) }
+    /// Advance past everything on screen — two pages when a spread is shown.
+    /// Deliberately not clamped: with nothing left to show, this is a no-op.
+    func goToNextPage() async {
+        await go(to: state.currentPageIndex + state.displayedPageCount)
+    }
+
+    /// Step back by the dual-page stride, clamped so page 1 stays reachable
+    /// from an odd position (which happens after toggling mid-book).
+    func goToPreviousPage() async {
+        let stride = state.isDualPage ? 2 : 1
+        await go(to: max(0, state.currentPageIndex - stride))
+    }
+
     func goToFirstPage() async { await go(to: 0) }
 
     func goToLastPage() async {
@@ -65,8 +77,32 @@ final class DefaultReaderUseCase: ReaderUseCase {
         await go(to: book.pageCount - 1)
     }
 
+    func toggleDualPage() async {
+        state.isDualPage.toggle()
+        // Re-render in place so the change is visible without a page turn.
+        await showPage(state.currentPageIndex)
+    }
+
     func clearError() {
         state.errorMessage = nil
+    }
+
+    /// The right-hand page of a spread, or nil when this page stands alone.
+    /// A wide page is skipped before its companion is ever decoded.
+    private func companion(
+        for image: PageImage, at index: Int, in session: ArchiveSession
+    ) async -> PageImage? {
+        guard state.isDualPage,
+              !SpreadRules.isWide(image),
+              let book = state.book,
+              book.pages.indices.contains(index + 1)
+        else { return nil }
+
+        // refocus: false — the companion must not drag the cache window along.
+        guard let next = try? await session.image(at: index + 1, refocus: false),
+              SpreadRules.shouldPair(dualPage: true, current: image, next: next)
+        else { return nil }
+        return next
     }
 
     /// Announce the opening page's proportions so the host can fit its window.
@@ -97,6 +133,7 @@ final class DefaultReaderUseCase: ReaderUseCase {
             // were decoding; a stale image must never overwrite a newer one.
             guard state.book?.url == bookURL, state.currentPageIndex == index else { return }
             state.currentImage = image
+            state.secondaryImage = await companion(for: image, at: index, in: session)
             await session.prefetch(around: index)
         } catch is CancellationError {
             // Superseded by a later page turn — nothing to report.

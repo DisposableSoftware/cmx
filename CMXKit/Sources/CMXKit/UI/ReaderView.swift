@@ -9,7 +9,7 @@ public struct ReaderView: View {
     private static let pagingKeys: Set<KeyEquivalent> = [
         .space, .leftArrow, .rightArrow, .upArrow, .downArrow,
         .pageUp, .pageDown, .home, .end,
-        "h", "j", "k", "l",
+        "h", "j", "k", "l", "d",
     ]
 
     public init(viewModel: ReaderViewModel) {
@@ -20,11 +20,13 @@ public struct ReaderView: View {
         ZStack {
             Color.black.ignoresSafeArea()
             if let image = viewModel.state.currentImage {
-                Image(decorative: image.cgImage, scale: 1)
-                    .resizable()
-                    .interpolation(.high)
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                // Two-up when a spread is showing, otherwise a single page.
+                HStack(spacing: 0) {
+                    page(image)
+                    if let secondary = viewModel.state.secondaryImage {
+                        page(secondary)
+                    }
+                }
             } else if viewModel.state.isLoading {
                 ProgressView()
             } else {
@@ -55,6 +57,14 @@ public struct ReaderView: View {
         }
     }
 
+    private func page(_ image: PageImage) -> some View {
+        Image(decorative: image.cgImage, scale: 1)
+            .resizable()
+            .interpolation(.high)
+            .scaledToFit()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
     private var placeholder: some View {
         VStack(spacing: 8) {
             Text("Open a comic")
@@ -77,6 +87,8 @@ public struct ReaderView: View {
             submit(.firstPage)
         case .end:
             submit(.lastPage)
+        case "d":
+            submit(.toggleDualPage)
         default:
             return .ignored
         }

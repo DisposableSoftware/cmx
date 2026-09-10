@@ -23,9 +23,11 @@ Quick Look thumbnails and previews ship as two app extensions (see **Quick Look*
 sizes itself to the opening page's proportions, and there is an About window (**cmx is pronounced
 "see-mix"**) carrying third-party license attribution.
 
+Dual-page layout is toggled with `d` (see **Dual-page layout** below).
+
 Deliberately **out of scope** unless explicitly asked: a library/shelf browser, `.cbr`/RAR support
-(detected and explained, never read), two-page spreads, reading-direction toggles, cloud sync,
-annotations, iOS/iPadOS targets. A settings screen is anticipated but not yet built — the Router is
+(detected and explained, never read), reading-direction toggles, cloud sync, annotations,
+iOS/iPadOS targets. A settings screen is anticipated but not yet built — the Router is
 in place so adding one is additive.
 
 There is no comic library and no collection model. The app opens whatever file it is handed and
@@ -225,6 +227,7 @@ Paging is the primary interaction and must feel instant.
 | `Space`, `→`, `↓`, `Page Down`, `l`, `j` | Next page |
 | `Shift-Space`, `←`, `↑`, `Page Up`, `h`, `k` | Previous page |
 | `Home` / `End` | First / last page |
+| `d` | Toggle dual-page layout |
 | `f` | Toggle full screen |
 | `q` | Quit |
 | `⌘O` | Open file |
@@ -239,6 +242,30 @@ domain input and live in the package's `ReaderView`; `q` (quit) and `f` (fullscr
 keys handled in the app target's `RootView`, reached when the reader lets the press bubble up.
 
 ---
+
+## Dual-page layout
+
+`d` toggles `ReaderState.isDualPage`. When on, `secondaryImage` holds the right-hand page and
+`displayedPageCount` is 2.
+
+**A wide page is never paired.** A landscape page is already a two-page spread — scanned that way, or
+a wide layout page — so pairing it would put four pages of content on screen and squash both.
+`SpreadRules` (pure, unit-tested) decides: pair only when dual-page is on, a companion exists, and
+neither page is landscape. `DefaultReaderUseCase.companion(for:at:in:)` checks the current page's
+shape *before* decoding a companion, so a solo wide page costs no extra decode.
+
+Navigation follows what is on screen: forward steps by `displayedPageCount`, so a solo wide page
+advances by one and a pair by two. Backward steps by the fixed dual stride and is clamped to 0 —
+without the clamp, toggling mid-book can leave an odd index from which page 1 is unreachable.
+Companion pages are fetched with `refocus: false` so the right-hand page does not drag
+`ArchiveSession`'s eviction window forward.
+
+Pairing starts wherever you are rather than forcing odd/even alignment: there is no cover-alone
+special case, and the mode is not persisted across launches. Toggling does not resize the window —
+it re-renders in place, because a window jumping on every `d` press would be worse than letterboxing.
+
+Verified live via synthetic keystrokes on a 6-page fixture whose page 3 is wide:
+`1 / 6` → `d` → `1–2 / 6` → `3 / 6` (alone) → `4–5 / 6` → `6 / 6`.
 
 ## Window sizing
 

@@ -31,6 +31,8 @@ public final class ReaderViewModel {
             await useCases.readerUseCase.goToFirstPage()
         case .lastPage:
             await useCases.readerUseCase.goToLastPage()
+        case .toggleDualPage:
+            await useCases.readerUseCase.toggleDualPage()
         case .toggleInspector:
             isInspectorVisible.toggle()
         case .dismissError:

@@ -36,8 +36,10 @@ actor ArchiveSession {
         self.pages = pages
     }
 
-    func image(at index: Int) async throws -> PageImage {
-        focusOn(index)
+    /// - Parameter refocus: pass false for a companion page, so fetching the
+    ///   right-hand page of a spread does not drag the eviction window forward.
+    func image(at index: Int, refocus: Bool = true) async throws -> PageImage {
+        if refocus { focusOn(index) }
         if let cached = cache[index] { return cached }
         return try await ensureTask(index).value
     }

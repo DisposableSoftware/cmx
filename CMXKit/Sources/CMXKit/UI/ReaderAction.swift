@@ -7,6 +7,7 @@ public enum ReaderAction: Equatable, Sendable {
     case previousPage
     case firstPage
     case lastPage
+    case toggleDualPage
     case toggleInspector
     case dismissError
 }
