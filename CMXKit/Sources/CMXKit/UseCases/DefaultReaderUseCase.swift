@@ -49,6 +49,7 @@ final class DefaultReaderUseCase: ReaderUseCase {
             state.currentPageIndex = resume
             state.isLoading = false
             await showPage(resume)
+            publishGeometry(for: url)
         } catch {
             state.isLoading = false
             state.errorMessage = Self.message(for: error, url: url)
@@ -66,6 +67,17 @@ final class DefaultReaderUseCase: ReaderUseCase {
 
     func clearError() {
         state.errorMessage = nil
+    }
+
+    /// Announce the opening page's proportions so the host can fit its window.
+    /// Uses the page actually shown — page 1, unless progress resumed further
+    /// in — because that is what the user is looking at.
+    private func publishGeometry(for url: URL) {
+        guard let image = state.currentImage?.cgImage, image.height > 0 else { return }
+        state.coverGeometry = CoverGeometry(
+            bookURL: url,
+            aspectRatio: CGFloat(image.width) / CGFloat(image.height)
+        )
     }
 
     /// Out-of-bounds targets are a silent no-op: never wrap, never beep.

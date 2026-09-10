@@ -11,6 +11,8 @@ public final class ReaderState {
     public internal(set) var currentImage: PageImage?
     public internal(set) var isLoading = false
     public internal(set) var errorMessage: String?
+    /// Set once per successful open; the host observes it to size its window.
+    public internal(set) var coverGeometry: CoverGeometry?
 
     public init() {}
 

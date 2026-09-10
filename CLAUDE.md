@@ -19,7 +19,9 @@ Keep this app small. The feature list is the whole feature list:
   in a small inspector.
 - Remember the last page read per file, so reopening resumes.
 
-Quick Look thumbnails and previews ship as two app extensions (see **Quick Look** below).
+Quick Look thumbnails and previews ship as two app extensions (see **Quick Look** below). The window
+sizes itself to the opening page's proportions, and there is an About window (**cmx is pronounced
+"see-mix"**) carrying third-party license attribution.
 
 Deliberately **out of scope** unless explicitly asked: a library/shelf browser, `.cbr`/RAR support
 (detected and explained, never read), two-page spreads, reading-direction toggles, cloud sync,
@@ -59,6 +61,8 @@ properties. A View never touches a UseCase; a UseCase never imports SwiftUI.
 | **View** | `ReaderView`, `MetadataInspector` | SwiftUI only; submits actions |
 | **Router** | `AppRouter`, `AppRoutingUseCase`, `Coordinator` | Which screen comes next |
 | **UseCase** | `CoverUseCase` | Cover + metadata for the Quick Look extensions (no UI state) |
+| **UI** | `CoverPreview`, `AboutView`, `LicenseList` | Views the extensions and app shell host |
+| **UI** | `WindowFit` | Pure window geometry; the host owns the NSWindow |
 | **Container** | `ReaderContainer` | Composition root — the only place concrete types are built |
 
 Every boundary in that table is a **protocol**. Concrete implementations (`ZipArchiveGateway`,
@@ -236,6 +240,38 @@ keys handled in the app target's `RootView`, reached when the reader lets the pr
 
 ---
 
+## Window sizing
+
+Opening a book publishes `ReaderState.coverGeometry` — the aspect ratio of the page shown at open
+(page 1, unless progress resumed further in). `RootView` observes it and calls `WindowSizing.fit`,
+which asks `WindowFit.contentSize` in the package for the geometry and then moves the NSWindow.
+
+Only on open: resizing on every page turn would fight the user, and double-page spreads would make
+the window jump. `CoverGeometry` carries a fresh `UUID` so reopening the same file still triggers a
+resize.
+
+`WindowFit`'s rules, in order: anchor on the window's current height (or 85% of the screen if the
+window is still at its minimum, meaning the user has never sized it), shrink to fit 95% of the
+screen preserving aspect, then grow to the minimum size — also preserving aspect, so minimums win
+over screen fit on a screen too small for them. Measured behavior: portrait/landscape/square pages
+produce windows matching their aspect to within 0.001. Heights vary run to run because of the
+screen-fit clamp; that is rule 2 working, not a bug.
+
+Gotcha: the main SwiftUI window reports **zero chrome** (`contentRect(forFrameRect:) == frame`), so
+its content aspect equals its frame aspect. A plain `NSWindow` on this OS has 32pt of chrome, and
+the About window does too. Don't hardcode a title-bar height — read it from the window.
+
+## About window
+
+A separate `Window` scene (`AppWindow.about`), replacing the stock panel via
+`CommandGroup(replacing: .appInfo)` because the standard About panel can't show the pronunciation or
+full license texts. It is not a Router step — the Router covers screens inside the main window, and
+this is its own scene.
+
+`OpenSourceLicense.all` in CMXKit holds third-party attribution, including full license text since
+MIT requires the notice to ship. **CMXKit owns this list because CMXKit owns the dependencies** — add
+or drop a package and its attribution travels with it. Today that is ZIPFoundation (MIT) alone.
+
 ## Conventions
 
 - **Swift 6 language mode**, strict concurrency. Toolchain here is Swift 6.4.
@@ -259,6 +295,11 @@ Logic lives in `CMXKit` precisely so it is testable without a UI. What must have
 - `AppRouter.nextStep(from:with:)` — it is a pure function, so assert step transitions directly. Keep
   this test in place as screens are added; it is the cheapest place to catch routing regressions.
 - Reading-progress persistence round-trip, including a saved path that no longer exists.
+
+To eyeball a SwiftUI view without launching the app, render it with `ImageRenderer` from a throwaway
+test. Two hard limits: it draws **nothing** inside a `ScrollView`, and `Button`/`Link` come out as
+placeholder blocks — which is why `LicenseList` is split out of `AboutView`. `NSApp` is nil outside a
+running app, so use `NSApplication.shared`.
 
 Use fixture `.cbz` files in `Tests/CMXKitTests/Fixtures/` — a few tiny images beat a real comic.
 UseCase tests use mock Gateways; they never open a real archive off disk. Don't test SwiftUI views
