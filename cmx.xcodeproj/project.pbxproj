@@ -7,12 +7,53 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ADBCB1FA3052485B0096804D /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBCB1F93052485B0096804D /* QuickLookThumbnailing.framework */; };
+		ADBCB1FC3052485B0096804D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBCB1FB3052485B0096804D /* Quartz.framework */; };
+		ADBCB2033052485B0096804D /* cmxThumbnail.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = ADBCB1F73052485B0096804D /* cmxThumbnail.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		ADBCB20E305248600096804D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBCB1FB3052485B0096804D /* Quartz.framework */; };
+		ADBCB21A305248600096804D /* cmxPreview.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = ADBCB20D305248600096804D /* cmxPreview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CA00000000000000000001AA /* CMXKit in Frameworks */ = {isa = PBXBuildFile; productRef = CA00000000000000000001AB /* CMXKit */; };
+		CA00000000000000000002AA /* CMXKit in Frameworks */ = {isa = PBXBuildFile; productRef = CA00000000000000000002AB /* CMXKit */; };
+		CA00000000000000000003AA /* CMXKit in Frameworks */ = {isa = PBXBuildFile; productRef = CA00000000000000000003AB /* CMXKit */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		ADBCB2013052485B0096804D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADBCB19F305241920096804D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ADBCB1F63052485B0096804D;
+			remoteInfo = cmxThumbnail;
+		};
+		ADBCB218305248600096804D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADBCB19F305241920096804D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ADBCB20C305248600096804D;
+			remoteInfo = cmxPreview;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		ADBCB2043052485B0096804D /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				ADBCB21A305248600096804D /* cmxPreview.appex in Embed Foundation Extensions */,
+				ADBCB2033052485B0096804D /* cmxThumbnail.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AD7EFFDC3052427E0000D140 /* cmx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = cmx.xcodeproj; sourceTree = "<group>"; };
 		ADBCB1A7305241920096804D /* cmx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cmx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADBCB1F73052485B0096804D /* cmxThumbnail.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = cmxThumbnail.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADBCB1F93052485B0096804D /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
+		ADBCB1FB3052485B0096804D /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		ADBCB20D305248600096804D /* cmxPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = cmxPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -22,6 +63,20 @@
 				Info.plist,
 			);
 			target = ADBCB1A6305241920096804D /* cmx */;
+		};
+		ADBCB2083052485B0096804D /* Exceptions for "cmxThumbnail" folder in "cmxThumbnail" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = ADBCB1F63052485B0096804D /* cmxThumbnail */;
+		};
+		ADBCB21E305248600096804D /* Exceptions for "cmxPreview" folder in "cmxPreview" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = ADBCB20C305248600096804D /* cmxPreview */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -34,6 +89,22 @@
 			path = cmx;
 			sourceTree = "<group>";
 		};
+		ADBCB1FD3052485B0096804D /* cmxThumbnail */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				ADBCB2083052485B0096804D /* Exceptions for "cmxThumbnail" folder in "cmxThumbnail" target */,
+			);
+			path = cmxThumbnail;
+			sourceTree = "<group>";
+		};
+		ADBCB20F305248600096804D /* cmxPreview */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				ADBCB21E305248600096804D /* Exceptions for "cmxPreview" folder in "cmxPreview" target */,
+			);
+			path = cmxPreview;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +112,21 @@
 			isa = PBXFrameworksBuildPhase;
 			files = (
 				CA00000000000000000001AA /* CMXKit in Frameworks */,
+			);
+		};
+		ADBCB1F43052485B0096804D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				CA00000000000000000002AA /* CMXKit in Frameworks */,
+				ADBCB1FA3052485B0096804D /* QuickLookThumbnailing.framework in Frameworks */,
+				ADBCB1FC3052485B0096804D /* Quartz.framework in Frameworks */,
+			);
+		};
+		ADBCB20A305248600096804D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				CA00000000000000000003AA /* CMXKit in Frameworks */,
+				ADBCB20E305248600096804D /* Quartz.framework in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -57,6 +143,9 @@
 			isa = PBXGroup;
 			children = (
 				ADBCB1A9305241920096804D /* cmx */,
+				ADBCB1FD3052485B0096804D /* cmxThumbnail */,
+				ADBCB20F305248600096804D /* cmxPreview */,
+				ADBCB1F83052485B0096804D /* Frameworks */,
 				ADBCB1A8305241920096804D /* Products */,
 				ADBCB1B6305242800096804D /* Recovered References */,
 			);
@@ -66,6 +155,8 @@
 			isa = PBXGroup;
 			children = (
 				ADBCB1A7305241920096804D /* cmx.app */,
+				ADBCB1F73052485B0096804D /* cmxThumbnail.appex */,
+				ADBCB20D305248600096804D /* cmxPreview.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -78,6 +169,15 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		ADBCB1F83052485B0096804D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ADBCB1F93052485B0096804D /* QuickLookThumbnailing.framework */,
+				ADBCB1FB3052485B0096804D /* Quartz.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -88,8 +188,13 @@
 				ADBCB1A3305241920096804D /* Sources */,
 				ADBCB1A4305241920096804D /* Frameworks */,
 				ADBCB1A5305241920096804D /* Resources */,
+				ADBCB2043052485B0096804D /* Embed Foundation Extensions */,
 			);
 			buildRules = (
+			);
+			dependencies = (
+				ADBCB2023052485B0096804D /* PBXTargetDependency */,
+				ADBCB219305248600096804D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				ADBCB1A9305241920096804D /* cmx */,
@@ -102,6 +207,48 @@
 			productReference = ADBCB1A7305241920096804D /* cmx.app */;
 			productType = "com.apple.product-type.application";
 		};
+		ADBCB1F63052485B0096804D /* cmxThumbnail */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ADBCB2073052485B0096804D /* Build configuration list for PBXNativeTarget "cmxThumbnail" */;
+			buildPhases = (
+				ADBCB1F33052485B0096804D /* Sources */,
+				ADBCB1F43052485B0096804D /* Frameworks */,
+				ADBCB1F53052485B0096804D /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				ADBCB1FD3052485B0096804D /* cmxThumbnail */,
+			);
+			name = cmxThumbnail;
+			packageProductDependencies = (
+				CA00000000000000000002AB /* CMXKit */,
+			);
+			productName = cmxThumbnail;
+			productReference = ADBCB1F73052485B0096804D /* cmxThumbnail.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		ADBCB20C305248600096804D /* cmxPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ADBCB21B305248600096804D /* Build configuration list for PBXNativeTarget "cmxPreview" */;
+			buildPhases = (
+				ADBCB209305248600096804D /* Sources */,
+				ADBCB20A305248600096804D /* Frameworks */,
+				ADBCB20B305248600096804D /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				ADBCB20F305248600096804D /* cmxPreview */,
+			);
+			name = cmxPreview;
+			packageProductDependencies = (
+				CA00000000000000000003AB /* CMXKit */,
+			);
+			productName = cmxPreview;
+			productReference = ADBCB20D305248600096804D /* cmxPreview.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -113,6 +260,12 @@
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					ADBCB1A6305241920096804D = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					ADBCB1F63052485B0096804D = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					ADBCB20C305248600096804D = {
 						CreatedOnToolsVersion = 27.0;
 					};
 				};
@@ -141,12 +294,24 @@
 			projectRoot = "";
 			targets = (
 				ADBCB1A6305241920096804D /* cmx */,
+				ADBCB1F63052485B0096804D /* cmxThumbnail */,
+				ADBCB20C305248600096804D /* cmxPreview */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		ADBCB1A5305241920096804D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		ADBCB1F53052485B0096804D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		ADBCB20B305248600096804D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -159,7 +324,30 @@
 			files = (
 			);
 		};
+		ADBCB1F33052485B0096804D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		ADBCB209305248600096804D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ADBCB2023052485B0096804D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ADBCB1F63052485B0096804D /* cmxThumbnail */;
+			targetProxy = ADBCB2013052485B0096804D /* PBXContainerItemProxy */;
+		};
+		ADBCB219305248600096804D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ADBCB20C305248600096804D /* cmxPreview */;
+			targetProxy = ADBCB218305248600096804D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		ADBCB1B0305241930096804D /* Debug configuration for PBXProject "cmx" */ = {
@@ -342,6 +530,120 @@
 			};
 			name = Release;
 		};
+		ADBCB2053052485B0096804D /* Debug configuration for PBXNativeTarget "cmxThumbnail" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = cmxThumbnail/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = cmxThumbnail;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = lol.weston.cmx.cmxThumbnail;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		ADBCB2063052485B0096804D /* Release configuration for PBXNativeTarget "cmxThumbnail" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = cmxThumbnail/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = cmxThumbnail;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = lol.weston.cmx.cmxThumbnail;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		ADBCB21C305248600096804D /* Debug configuration for PBXNativeTarget "cmxPreview" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = cmxPreview/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = cmxPreview;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = lol.weston.cmx.cmxPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		ADBCB21D305248600096804D /* Release configuration for PBXNativeTarget "cmxPreview" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = cmxPreview/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = cmxPreview;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = lol.weston.cmx.cmxPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -361,6 +663,22 @@
 			);
 			defaultConfigurationName = Release;
 		};
+		ADBCB2073052485B0096804D /* Build configuration list for PBXNativeTarget "cmxThumbnail" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ADBCB2053052485B0096804D /* Debug configuration for PBXNativeTarget "cmxThumbnail" */,
+				ADBCB2063052485B0096804D /* Release configuration for PBXNativeTarget "cmxThumbnail" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		ADBCB21B305248600096804D /* Build configuration list for PBXNativeTarget "cmxPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ADBCB21C305248600096804D /* Debug configuration for PBXNativeTarget "cmxPreview" */,
+				ADBCB21D305248600096804D /* Release configuration for PBXNativeTarget "cmxPreview" */,
+			);
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -372,6 +690,14 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		CA00000000000000000001AB /* CMXKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CMXKit;
+		};
+		CA00000000000000000002AB /* CMXKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CMXKit;
+		};
+		CA00000000000000000003AB /* CMXKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CMXKit;
 		};

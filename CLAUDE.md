@@ -19,9 +19,12 @@ Keep this app small. The feature list is the whole feature list:
   in a small inspector.
 - Remember the last page read per file, so reopening resumes.
 
-Deliberately **out of scope** unless explicitly asked: a library/shelf browser, `.cbr`/RAR support,
-two-page spreads, reading-direction toggles, cloud sync, annotations, iOS/iPadOS targets. A settings
-screen is anticipated but not yet built — the Router is in place so adding one is additive.
+Quick Look thumbnails and previews ship as two app extensions (see **Quick Look** below).
+
+Deliberately **out of scope** unless explicitly asked: a library/shelf browser, `.cbr`/RAR support
+(detected and explained, never read), two-page spreads, reading-direction toggles, cloud sync,
+annotations, iOS/iPadOS targets. A settings screen is anticipated but not yet built — the Router is
+in place so adding one is additive.
 
 There is no comic library and no collection model. The app opens whatever file it is handed and
 nothing more.
@@ -55,6 +58,7 @@ properties. A View never touches a UseCase; a UseCase never imports SwiftUI.
 | **ViewModel** | `ReaderViewModel` | `ReaderAction` in, observable state out |
 | **View** | `ReaderView`, `MetadataInspector` | SwiftUI only; submits actions |
 | **Router** | `AppRouter`, `AppRoutingUseCase`, `Coordinator` | Which screen comes next |
+| **UseCase** | `CoverUseCase` | Cover + metadata for the Quick Look extensions (no UI state) |
 | **Container** | `ReaderContainer` | Composition root — the only place concrete types are built |
 
 Every boundary in that table is a **protocol**. Concrete implementations (`ZipArchiveGateway`,
@@ -155,6 +159,46 @@ do not invent a custom UTI (one existed briefly and matched nothing on disk). Th
 The installed copy at `/Applications/cmx.app` is the registered `.cbz` handler; after reinstalling,
 stale DerivedData copies can steal the registration — `lsregister -u` them if double-click opens the
 wrong build.
+
+### Mislabeled archives
+
+RARs wearing a `.cbz` extension are common in the wild, so `ZipArchiveGateway` sniffs magic bytes
+before handing the file to ZIPFoundation — content is trusted over extension, the same rule
+`cbz-tool` (`../cbz-tool`, `archive::is_rar_file`) applies. `Rar!` throws `ArchiveError.rarArchive`
+and anything that isn't a ZIP throws `.unrecognizedFormat`; both explain themselves and already name
+the file, so `DefaultReaderUseCase` surfaces their text verbatim rather than wrapping it. CBR is
+still out of scope — the error tells the user to convert, it does not attempt to read RAR.
+
+### Quick Look
+
+Two sandboxed app extensions live in the bundle's `PlugIns/`, both declaring
+`public.cbz-archive` and both thin shells over CMXKit:
+
+| Target | Extension point | Job |
+|---|---|---|
+| `cmxThumbnail` | `com.apple.quicklook.thumbnail` | Finder icon = the cover page |
+| `cmxPreview` | `com.apple.quicklook.preview` | Space-bar panel: cover + metadata |
+
+`CoverUseCase` (built by `CoverContainer`) is their whole entry point; `CoverPreview` lives in the
+package's UI layer so the extension only hosts it. Notes that cost real time to learn:
+
+- Extensions are **sandboxed even though the app is not**. That is fine: Quick Look grants read
+  access to the one file being previewed, so no user-selected-file entitlement is needed.
+- `cmxThumbnail` must stay **nonisolated** — `QLThumbnailProvider` is a nonisolated superclass, so
+  `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` makes the override fail to compile. `cmxPreview` keeps
+  MainActor isolation because it is an `NSViewController`.
+- In the thumbnail drawing block, fill the **context's own pixel extent** (`context.width/height`),
+  not the `contextSize` you passed in. Quick Look hands back a context scaled by the screen factor,
+  and drawing into the point-sized rect leaves the page in the bottom-left quadrant.
+- Extension bundle ids must be prefixed by the host app's (`lol.weston.cmx.cmx*`); the target
+  template defaults to `com.yourcompany.*`.
+- `NSExtension` in an extension's Info.plist is a **dictionary**. The `AddInfoPlist` MCP tool can
+  only write dictionary *arrays*, so it silently produces the wrong shape here — write that plist
+  directly and `plutil -lint` it.
+- `qlmanage -t` produced no output for these extensions even when they work. Verify with
+  `QLThumbnailGenerator` from a small script instead, and reset with `qlmanage -r cache`.
+- `pluginkit -mAv | grep cmx` lists both; `pluginkit -p <point>` matches nothing and is not a
+  useful check.
 
 ### Performance
 

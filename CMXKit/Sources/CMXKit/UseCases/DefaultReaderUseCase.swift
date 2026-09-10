@@ -34,7 +34,7 @@ final class DefaultReaderUseCase: ReaderUseCase {
             // Metadata is best-effort: absent or unreadable ComicInfo.xml
             // must never fail the open.
             var metadata: ComicMetadata?
-            if let infoPath = Self.comicInfoEntry(in: entries),
+            if let infoPath = ComicInfoLocator.entry(in: entries),
                let xml = try? await session.data(forEntry: infoPath) {
                 metadata = metadataGateway.metadata(fromXML: xml)
             }
@@ -94,15 +94,14 @@ final class DefaultReaderUseCase: ReaderUseCase {
         }
     }
 
-    /// ComicInfo.xml at the root is the spec; fall back to one anywhere.
-    private static func comicInfoEntry(in entries: [String]) -> String? {
-        entries.first { $0.lowercased() == "comicinfo.xml" }
-            ?? entries.first { ($0 as NSString).lastPathComponent.lowercased() == "comicinfo.xml" }
-    }
-
     private static func message(for error: Error, url: URL) -> String {
+        // Both of these already name the file and explain themselves; wrapping
+        // them would repeat the filename.
         if let readerError = error as? ReaderError {
             return readerError.localizedDescription
+        }
+        if let archiveError = error as? ArchiveError {
+            return archiveError.localizedDescription
         }
         return "Couldn't open “\(url.lastPathComponent)”: \(error.localizedDescription)"
     }

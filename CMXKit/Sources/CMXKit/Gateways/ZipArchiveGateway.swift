@@ -3,7 +3,16 @@ import ZIPFoundation
 
 struct ZipArchiveGateway: ArchiveGateway {
     func openArchive(at url: URL) throws -> any ComicArchive {
-        try ZipComicArchive(url: url)
+        // Trust content over extension, so a mislabeled RAR gets a real
+        // explanation rather than an opaque ZIP parse failure.
+        switch ArchiveFormat.detect(at: url) {
+        case .zip:
+            return try ZipComicArchive(url: url)
+        case .rar:
+            throw ArchiveError.rarArchive(url.lastPathComponent)
+        case .unrecognized:
+            throw ArchiveError.unrecognizedFormat(url.lastPathComponent)
+        }
     }
 }
 
