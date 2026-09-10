@@ -21,7 +21,8 @@ Keep this app small. The feature list is the whole feature list:
 
 Quick Look thumbnails and previews ship as two app extensions (see **Quick Look** below). The window
 sizes itself to the opening page's proportions, and there is an About window (**cmx is pronounced
-"see-mix"**) carrying third-party license attribution.
+"see-mix"**) carrying third-party license attribution. The last comic reopens on launch, and
+recent comics appear under File ▸ Open Recent and in the Dock menu.
 
 Dual-page layout is toggled with `d` (see **Dual-page layout** below).
 
@@ -234,6 +235,23 @@ Paging is the primary interaction and must feel instant.
 | `⌘I` | Toggle metadata inspector |
 | `Esc` | Exit full screen |
 
+Every reading command also appears in the menu bar with a ⌘ shortcut, because on a Mac the menu bar
+is how an app documents itself. The two layers coexist deliberately: bare keys are the reading
+posture, menu shortcuts are the discoverable ones. They never double-fire — menu key equivalents are
+consumed before the view's `onKeyPress` ever sees them.
+
+| Menu | Item | Shortcut |
+|---|---|---|
+| File | Open… / Open Recent ▸ | `⌘O` |
+| View | Dual Page (toggle) | `⌘2` |
+| View | Comic Info (toggle) | `⌘I` |
+| View | Enter Full Screen | `⌃⌘F` (system) |
+| Go | Next / Previous Page | `⌘→` / `⌘←` |
+| Go | First / Last Page | `⌘Home` / `⌘End` |
+
+Reading commands are disabled with no book open. `CommandMenu` and `CommandGroup` do **not** accept
+`.disabled()` — it goes on the individual items.
+
 Rules: at the first or last page the corresponding key is a no-op — never wrap, never beep. Key
 handling belongs in the View via SwiftUI `.onKeyPress` and `Commands`; the resulting
 `ReaderAction.nextPage` / `.previousPage` carries no key information into the ViewModel. Bounds logic
@@ -266,6 +284,23 @@ it re-renders in place, because a window jumping on every `d` press would be wor
 
 Verified live via synthetic keystrokes on a 6-page fixture whose page 3 is wide:
 `1 / 6` → `d` → `1–2 / 6` → `3 / 6` (alone) → `4–5 / 6` → `6 / 6`.
+
+## Recent comics and session restore
+
+`ReadingProgressGateway` persists both the page within a book and which book was open last.
+`lastOpenedURL` returns nil for a file that has moved or been deleted, so a vanished comic is simply
+"no session" rather than an error — the same rule the per-file progress follows.
+
+On launch with no document, `AppDelegate` waits 250 ms before calling `restoreLastSession()`. The
+delay is deliberate: Finder can deliver an open event slightly after launch, and restoring
+immediately would load two comics back to back. `restoreLastSession()` is also a no-op when a book is
+already open, so a document handed over at launch always wins.
+
+Open Recent is fed by `NSDocumentController.noteNewRecentDocumentURL`, which also populates the Dock
+icon's menu. It is driven from `state.book?.url` changing — that only happens on a *successful* open,
+so a mislabeled CBR or a broken file never lands in the menu. Note that
+`CommandGroup(replacing: .newItem)` removes the stock New/Open/**Open Recent** group wholesale, which
+is why Open Recent has to be rebuilt by hand.
 
 ## Window sizing
 

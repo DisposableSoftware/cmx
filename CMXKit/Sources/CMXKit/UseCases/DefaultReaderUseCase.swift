@@ -42,6 +42,7 @@ final class DefaultReaderUseCase: ReaderUseCase {
             await session.configure(pages: pages)
             self.session = session
             state.book = Book(url: url, pages: pages, metadata: metadata)
+            progressGateway.setLastOpened(url)
             state.currentImage = nil
             state.secondaryImage = nil
 
@@ -75,6 +76,11 @@ final class DefaultReaderUseCase: ReaderUseCase {
     func goToLastPage() async {
         guard let book = state.book else { return }
         await go(to: book.pageCount - 1)
+    }
+
+    func restoreLastSession() async {
+        guard state.book == nil, let url = progressGateway.lastOpenedURL else { return }
+        await openBook(at: url)
     }
 
     func toggleDualPage() async {

@@ -65,7 +65,9 @@ struct MockMetadataGateway: MetadataGateway {
 
 final class MockProgressGateway: ReadingProgressGateway, @unchecked Sendable {
     var saved: [String: Int] = [:]
+    var lastOpenedURL: URL?
 
     func savedPageIndex(for url: URL) -> Int? { saved[url.path] }
     func save(pageIndex: Int, for url: URL) { saved[url.path] = pageIndex }
+    func setLastOpened(_ url: URL) { lastOpenedURL = url }
 }

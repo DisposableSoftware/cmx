@@ -15,6 +15,11 @@ struct RootView: View {
             // Opening a book publishes its page proportions; match the window
             // to them. Only on open — resizing on every page turn would fight
             // the user, and spreads would make it jump.
+            // book changes only on a successful open, so a CBR or a broken
+            // file never lands in Open Recent.
+            .onChange(of: model.viewModel.state.book?.url) { _, url in
+                if let url { model.noteOpened(url) }
+            }
             .onChange(of: model.viewModel.state.coverGeometry) { _, geometry in
                 guard let geometry, let window else { return }
                 WindowSizing.fit(window, toAspectRatio: geometry.aspectRatio)

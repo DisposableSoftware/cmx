@@ -7,6 +7,9 @@ import Foundation
 public protocol ReaderUseCase: AnyObject {
     var state: ReaderState { get }
     func openBook(at url: URL) async
+    /// Reopen whatever was being read last. A no-op when a book is already
+    /// open, nothing was recorded, or the file is gone.
+    func restoreLastSession() async
     func goToNextPage() async
     func goToPreviousPage() async
     func goToFirstPage() async
