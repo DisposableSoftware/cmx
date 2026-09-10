@@ -1,3 +1,4 @@
+import AppKit
 import CMXKit
 import SwiftUI
 
@@ -9,6 +10,21 @@ struct RootView: View {
     var body: some View {
         ReaderView(viewModel: model.viewModel)
             .frame(minWidth: 400, minHeight: 500)
+            // App-shell keys. These sit outside the package: paging keys are
+            // domain input (ReaderView), but quit and fullscreen belong to
+            // the app. Unhandled presses bubble up the focus chain to here.
+            .onKeyPress(keys: ["q", "f"]) { press in
+                switch press.key {
+                case "q":
+                    NSApplication.shared.terminate(nil)
+                    return .handled
+                case "f":
+                    NSApp.keyWindow?.toggleFullScreen(nil)
+                    return .handled
+                default:
+                    return .ignored
+                }
+            }
             .fileImporter(
                 isPresented: $model.isImporterPresented,
                 allowedContentTypes: [.cbzArchive]

@@ -146,6 +146,16 @@ actual image entries instead.
 
 Window title: `Series #Number — Title` when metadata exists, else the filename without extension.
 
+### File type identity
+
+macOS 27 declares **`public.cbz-archive`** natively (CoreTypes) — that is the UTI real `.cbz` files
+carry. The app's document type, `UTType.cbzArchive`, and the LaunchServices association all use it;
+do not invent a custom UTI (one existed briefly and matched nothing on disk). The
+`UTImportedTypeDeclarations` entry in Info.plist re-imports the same identifier purely as a fallback.
+The installed copy at `/Applications/cmx.app` is the registered `.cbz` handler; after reinstalling,
+stale DerivedData copies can steal the registration — `lsregister -u` them if double-click opens the
+wrong build.
+
 ### Performance
 
 A comic is 20–200 large images; loading them all is an easy way to eat a gigabyte of RAM.
@@ -164,9 +174,11 @@ Paging is the primary interaction and must feel instant.
 
 | Key | Action |
 |---|---|
-| `Space`, `→`, `↓`, `Page Down` | Next page |
-| `Shift-Space`, `←`, `↑`, `Page Up` | Previous page |
+| `Space`, `→`, `↓`, `Page Down`, `l`, `j` | Next page |
+| `Shift-Space`, `←`, `↑`, `Page Up`, `h`, `k` | Previous page |
 | `Home` / `End` | First / last page |
+| `f` | Toggle full screen |
+| `q` | Quit |
 | `⌘O` | Open file |
 | `⌘I` | Toggle metadata inspector |
 | `Esc` | Exit full screen |
@@ -174,7 +186,9 @@ Paging is the primary interaction and must feel instant.
 Rules: at the first or last page the corresponding key is a no-op — never wrap, never beep. Key
 handling belongs in the View via SwiftUI `.onKeyPress` and `Commands`; the resulting
 `ReaderAction.nextPage` / `.previousPage` carries no key information into the ViewModel. Bounds logic
-lives in the UseCase, not in the key handler.
+lives in the UseCase, not in the key handler. Split by ownership: paging keys (including `hjkl`) are
+domain input and live in the package's `ReaderView`; `q` (quit) and `f` (fullscreen) are app-shell
+keys handled in the app target's `RootView`, reached when the reader lets the press bubble up.
 
 ---
 

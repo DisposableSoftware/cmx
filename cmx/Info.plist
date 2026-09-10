@@ -13,7 +13,7 @@
 			<string>Default</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>lol.weston.cmx.cbz</string>
+				<string>public.cbz-archive</string>
 			</array>
 		</dict>
 	</array>
@@ -27,7 +27,7 @@
 			<key>UTTypeDescription</key>
 			<string>Comic Book Archive</string>
 			<key>UTTypeIdentifier</key>
-			<string>lol.weston.cmx.cbz</string>
+			<string>public.cbz-archive</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

@@ -1,6 +1,7 @@
 import UniformTypeIdentifiers
 
 extension UTType {
-    /// Backed by the UTImportedTypeDeclarations entry in Info.plist.
-    static let cbzArchive = UTType(importedAs: "lol.weston.cmx.cbz")
+    /// macOS declares public.cbz-archive natively (CoreTypes); the
+    /// UTImportedTypeDeclarations entry in Info.plist is only a fallback.
+    static let cbzArchive = UTType(importedAs: "public.cbz-archive")
 }

@@ -9,6 +9,7 @@ public struct ReaderView: View {
     private static let pagingKeys: Set<KeyEquivalent> = [
         .space, .leftArrow, .rightArrow, .upArrow, .downArrow,
         .pageUp, .pageDown, .home, .end,
+        "h", "j", "k", "l",
     ]
 
     public init(viewModel: ReaderViewModel) {
@@ -68,9 +69,9 @@ public struct ReaderView: View {
         switch press.key {
         case .space:
             submit(press.modifiers.contains(.shift) ? .previousPage : .nextPage)
-        case .rightArrow, .downArrow, .pageDown:
+        case .rightArrow, .downArrow, .pageDown, "l", "j":
             submit(.nextPage)
-        case .leftArrow, .upArrow, .pageUp:
+        case .leftArrow, .upArrow, .pageUp, "h", "k":
             submit(.previousPage)
         case .home:
             submit(.firstPage)
