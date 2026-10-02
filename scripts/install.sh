@@ -30,6 +30,9 @@ rm -rf "$DEST"
 ditto "$APP" "$DEST"
 
 echo "▸ Registering with LaunchServices…"
+# The build product registers itself too; drop it so Launchpad and the
+# .cbz association only see the installed copy.
+"$LSREGISTER" -u "$PWD/$APP" 2>/dev/null || true
 "$LSREGISTER" -f "$DEST"
 
 echo "✓ Installed $(defaults read "$DEST/Contents/Info" CFBundleShortVersionString) → $DEST"
