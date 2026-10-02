@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 
 /// Owns one open archive for the life of a book: extraction, off-main decode,
@@ -5,6 +6,10 @@ import Foundation
 /// decodes the user has paged past.
 actor ArchiveSession {
     private let archiveGateway: any ArchiveGateway
+    /// Decode pages no larger than this. The reader passes nil and decodes at
+    /// full size; Quick Look passes a cap, because an extension that eats a
+    /// 4000px page gets jetsammed.
+    private let maxPixelSize: CGFloat?
     private var archive: (any ComicArchive)?
     private var pages: [Page] = []
     private var cache: [Int: PageImage] = [:]
@@ -15,8 +20,9 @@ actor ArchiveSession {
     /// and their in-flight decodes cancelled.
     private let keepRadius = 2
 
-    init(archiveGateway: any ArchiveGateway) {
+    init(archiveGateway: any ArchiveGateway, maxPixelSize: CGFloat? = nil) {
         self.archiveGateway = archiveGateway
+        self.maxPixelSize = maxPixelSize
     }
 
     /// Opens the archive and returns its raw entry paths. Runs on the actor's
@@ -67,14 +73,15 @@ actor ArchiveSession {
             return Task { throw ReaderError.pageOutOfRange }
         }
         let path = pages[index].entryPath
+        let cap = maxPixelSize
         let task = Task.detached(priority: .userInitiated) {
             try Task.checkCancellation()
             let data = try archive.data(forEntry: path)
             try Task.checkCancellation()
-            guard let image = ImageDecoder.decode(data) else {
-                throw ReaderError.undecodablePage(path)
-            }
-            return image
+            let decoded = cap.map { ImageDecoder.decodeThumbnail(data, maxPixelSize: $0) }
+                ?? ImageDecoder.decode(data)
+            guard let decoded else { throw ReaderError.undecodablePage(path) }
+            return decoded
         }
         inFlight[index] = task
         Task { await self.finish(index, with: task) }
