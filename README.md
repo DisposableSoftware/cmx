@@ -51,3 +51,7 @@ swift test --package-path CMXKit
 
 [ZIPFoundation](https://github.com/weichsel/ZIPFoundation) (MIT). The full license text is in the
 app's About window.
+
+## License
+
+cmx is public domain under the [Unlicense](LICENSE). ZIPFoundation keeps its own MIT license.
