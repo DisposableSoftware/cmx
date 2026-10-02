@@ -6,28 +6,24 @@ final class DefaultReaderUseCase: ReaderUseCase {
     private let archiveGateway: any ArchiveGateway
     private let metadataGateway: any MetadataGateway
     private let progressGateway: any ReadingProgressGateway
-    private let maxPixelSize: CGFloat?
     private var session: ArchiveSession?
 
     init(
         archiveGateway: any ArchiveGateway,
         metadataGateway: any MetadataGateway,
         progressGateway: any ReadingProgressGateway,
-        state: ReaderState,
-        maxPixelSize: CGFloat? = nil
+        state: ReaderState
     ) {
         self.archiveGateway = archiveGateway
         self.metadataGateway = metadataGateway
         self.progressGateway = progressGateway
         self.state = state
-        self.maxPixelSize = maxPixelSize
     }
 
     func openBook(at url: URL) async {
         state.isLoading = true
         state.errorMessage = nil
-        let session = ArchiveSession(
-            archiveGateway: archiveGateway, maxPixelSize: maxPixelSize)
+        let session = ArchiveSession(archiveGateway: archiveGateway)
         do {
             let entries = try await session.open(url: url)
             let pages = PageList.pages(fromEntries: entries)

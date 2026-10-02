@@ -45,28 +45,3 @@ final class DefaultsReadingProgressGateway: ReadingProgressGateway, @unchecked S
         Self.keyPrefix + url.standardizedFileURL.path
     }
 }
-
-/// Progress that lives only as long as the process. Quick Look uses it: the
-/// extension is sandboxed, so it cannot see the app's UserDefaults anyway, and
-/// a preview has no business writing the user's reading position.
-final class InMemoryProgressGateway: ReadingProgressGateway, @unchecked Sendable {
-    private let lock = NSLock()
-    private var pages: [String: Int] = [:]
-    private var lastOpened: URL?
-
-    func savedPageIndex(for url: URL) -> Int? {
-        lock.withLock { pages[url.standardizedFileURL.path] }
-    }
-
-    func save(pageIndex: Int, for url: URL) {
-        lock.withLock { pages[url.standardizedFileURL.path] = pageIndex }
-    }
-
-    var lastOpenedURL: URL? {
-        lock.withLock { lastOpened }
-    }
-
-    func setLastOpened(_ url: URL) {
-        lock.withLock { lastOpened = url }
-    }
-}

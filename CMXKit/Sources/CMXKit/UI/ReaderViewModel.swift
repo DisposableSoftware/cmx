@@ -4,9 +4,7 @@ import Observation
 @MainActor
 @Observable
 public final class ReaderViewModel {
-    /// Only the reader: this view model never navigates, and narrowing the
-    /// requirement is what lets the Quick Look extension reuse it.
-    public typealias UseCases = HasReaderUseCase
+    public typealias UseCases = HasReaderUseCase & HasAppRoutingUseCase
 
     public private(set) var isInspectorVisible = false
 
