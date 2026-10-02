@@ -2,6 +2,10 @@
 
 A minimal macOS comic reader for `.cbz` files. *cmx is pronounced "see-mix".*
 
+> **Built entirely with AI.** Every line of code, every test, the icons, and this README were
+> written by an AI coding agent ([Claude Code](https://claude.com/claude-code)). A human chose
+> what to build, directed the work, and tested the app, but did not write the code by hand.
+
 It shows one page at a time, fit to the window, with nothing drawn over the image. It has no
 library, so it opens whatever file you hand it and remembers where you left off.
 
