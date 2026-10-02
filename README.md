@@ -31,9 +31,30 @@ convert it.
 | `⌘I` | Comic info |
 | `q` | Quit |
 
+## Install
+
+Requires macOS 27.
+
+Download `cmx-1.0.zip` from [Releases](https://github.com/westongpt/cmx/releases), unzip it, and move
+`cmx.app` to `/Applications`.
+
+The build is not notarized, so macOS blocks it the first time with "cmx" Not Opened (or
+"Apple could not verify…"). To allow it, do one of:
+
+- **System Settings:** try to open cmx once and dismiss the warning. Then go to System Settings ▸
+  Privacy & Security, scroll to Security, click **Open Anyway** next to the cmx message, and confirm.
+- **Terminal:** clear the quarantine flag that macOS adds to downloaded files:
+
+  ```sh
+  xattr -dr com.apple.quarantine /Applications/cmx.app
+  ```
+
+You only need to do this once. To make cmx open `.cbz` files on double-click, choose Get Info on any
+`.cbz` file in Finder, pick cmx under Open with, and click Change All.
+
 ## Build
 
-Requires macOS 27 and Xcode.
+Building from source avoids the warning entirely. Requires macOS 27 and Xcode.
 
 ```sh
 scripts/install.sh            # build Release, install to /Applications, register .cbz handling
