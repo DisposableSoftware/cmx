@@ -2,6 +2,15 @@
 
 A minimal macOS comic reader for `.cbz` files. *cmx is pronounced "see-mix".*
 
+> [!WARNING]
+> **Certified, artisanal, vibe-coded slop.**
+>
+> No human has read this code. An AI wrote all of it while a person said "yeah, looks
+> good" and pressed Enter a lot.
+> It only reads comics, but it will forget your page, or open the wrong one, with great confidence.
+>
+> Bug reports will be read with great affection and then ignored.
+
 > **Built entirely with AI.** Every line of code, every test, the icons, and this README were
 > written by an AI coding agent ([Claude Code](https://claude.com/claude-code)). A human chose
 > what to build, directed the work, and tested the app, but did not write the code by hand.
@@ -39,7 +48,7 @@ convert it.
 
 Requires macOS 27.
 
-Download `cmx-1.0.zip` from [Releases](https://github.com/westongpt/cmx/releases), unzip it, and move
+Download `cmx-1.0.zip` from [Releases](https://github.com/DisposableSoftware/cmx/releases), unzip it, and move
 `cmx.app` to `/Applications`.
 
 The build is not notarized, so macOS blocks it the first time with "cmx" Not Opened (or
