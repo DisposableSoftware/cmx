@@ -48,7 +48,7 @@ convert it.
 
 Requires macOS 27.
 
-Download `cmx-1.0.zip` from [Releases](https://github.com/DisposableSoftware/cmx/releases), unzip it, and move
+Download `cmx-0.1.0.zip` from [Releases](https://github.com/DisposableSoftware/cmx/releases), unzip it, and move
 `cmx.app` to `/Applications`.
 
 The build is not notarized, so macOS blocks it the first time with "cmx" Not Opened (or
